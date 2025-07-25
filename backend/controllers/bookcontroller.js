@@ -19,25 +19,34 @@ const bookController = {
     res.status(201).json(book);
   }),
 
-  // List all books with optional filters
-  list: asyncHandler(async (req, res) => {
-    const { author, genre, page = 1, limit = 10 } = req.query;
-    const filters = {};
+ 
+list: asyncHandler(async (req, res) => {
+  const { author, genre, page = 1, limit = 10 } = req.query;
+  const filters = {};
 
-    if (author) filters.author = new RegExp(author, "i");  
-    if (genre) filters.genre = new RegExp(genre, "i"); 
+  if (author) filters.author = new RegExp(author, "i");  
+  if (genre) filters.genre = new RegExp(genre, "i"); 
 
-    try {
-      const books = await Book.find(filters)
-        .skip((page - 1) * limit)
-        .limit(Number(limit))
-        .sort({ createdAt: -1 });
+  try {
+    const books = await Book.find(filters)
+      .skip((page - 1) * limit)
+      .limit(Number(limit))
+      .sort({ createdAt: -1 });
 
-      res.status(200).json(books);
-    } catch (error) {
-      res.status(500).json({ message: "Error fetching books", error: error.message });
-    }
-  }),
+    const totalBooks = await Book.countDocuments(filters); 
+    const totalPages = Math.ceil(totalBooks / limit); 
+
+    res.status(200).json({
+      books,
+      totalPages,
+      currentPage: page,
+      totalBooks,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching books", error: error.message });
+  }
+}),
+
 
   // Get single book with reviews
   getById: asyncHandler(async (req, res) => {

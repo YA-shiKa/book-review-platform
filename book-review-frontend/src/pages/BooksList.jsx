@@ -5,27 +5,38 @@ import { Link } from "react-router-dom";
 const BooksList = () => {
   const [books, setBooks] = useState([]);
   const [filters, setFilters] = useState({ author: "", genre: "" });
+  const [currentPage, setCurrentPage] = useState(1); // Track current page
+  const [totalPages, setTotalPages] = useState(1); // Track total pages
 
   useEffect(() => {
     const fetchBooks = async () => {
       try {
         const { data } = await axios.get("http://localhost:8000/api/books", {
-          params: filters,  // Send filters as query parameters
+          params: {
+            ...filters,
+            page: currentPage,
+            limit: 10, // Limit books per page
+          },
         });
-        setBooks(data);
+        setBooks(data.books);
+        setTotalPages(data.totalPages);
       } catch (err) {
         console.error("Error fetching books:", err);
       }
     };
 
     fetchBooks();
-  }, [filters]); // Re-fetch when filters change
+  }, [filters, currentPage]); // Re-fetch when filters or page changes
 
   const handleFilterChange = (e) => {
     setFilters({
       ...filters,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
 
   return (
@@ -63,6 +74,25 @@ const BooksList = () => {
             </Link>
           </div>
         ))}
+      </div>
+
+      {/* Pagination Controls */}
+      <div className="flex justify-center mt-4">
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="px-4 py-2 bg-blue-500 text-white rounded-l hover:bg-blue-600"
+        >
+          Previous
+        </button>
+        <span className="px-4 py-2">{`Page ${currentPage} of ${totalPages}`}</span>
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className="px-4 py-2 bg-blue-500 text-white rounded-r hover:bg-blue-600"
+        >
+          Next
+        </button>
       </div>
     </div>
   );

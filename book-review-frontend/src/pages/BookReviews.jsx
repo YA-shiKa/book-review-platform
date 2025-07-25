@@ -1,42 +1,70 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 const BookReviews = () => {
   const { bookId } = useParams();
   const [reviews, setReviews] = useState([]);
-  const [averageRating, setAverageRating] = useState(0);
+  const [book, setBook] = useState({});
+  const [averageRating, setAverageRating] = useState(null); // Store average rating
 
   useEffect(() => {
-    const fetchReviews = async () => {
+    const fetchBookAndReviews = async () => {
       try {
-        const { data } = await axios.get(`http://localhost:8000/api/reviews/${bookId}`);
-        setReviews(data);
-        const avg = data.reduce((acc, curr) => acc + curr.rating, 0) / (data.length || 1);
-        setAverageRating(avg.toFixed(1));
+        // Fetch book details
+        const { data: bookData } = await axios.get(
+          `http://localhost:8000/api/books/${bookId}`
+        );
+        setBook(bookData);
+        setAverageRating(bookData.averageRating); // Set average rating
+
+        // Fetch reviews for the book
+        const { data: reviewsData } = await axios.get(
+          `http://localhost:8000/api/reviews/${bookId}`
+        );
+        setReviews(reviewsData);
       } catch (err) {
-        console.error("Error fetching reviews:", err);
+        console.error("Error fetching book/reviews:", err);
       }
     };
 
-    fetchReviews();
+    fetchBookAndReviews();
   }, [bookId]);
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
-      <h2 className="text-2xl mb-4">Reviews</h2>
-      <p className="mb-4">Average Rating: {averageRating}</p>
-      <div className="space-y-4">
-        {reviews.map((review) => (
-          <div key={review._id} className="bg-white p-4 rounded shadow-md">
-            <p>{review.review_text}</p>
-            <p>Rating: {review.rating}</p>
-            <p>By: {review.reviewer.username}</p>
-          </div>
-        ))}
-      </div>
+      <div className="bg-white p-6 rounded shadow-md">
+        <h2 className="text-3xl mb-4">{book.title}</h2>
+        <p className="mb-2">Author: {book.author}</p>
+        <p className="mb-2">Genre: {book.genre}</p>
+        
+        {/* Display Average Rating */}
+        <h3 className="text-xl mt-4">
+          Average Rating: {averageRating || "No ratings yet"}
+        </h3>
+
+        <h3 className="text-2xl mt-6">Reviews</h3>
+        {reviews.length === 0 ? (
+          <p>No reviews yet. Be the first to review!</p>
+        ) : (
+          reviews.map((review) => (
+            <div key={review._id} className="border-b mb-4 pb-4">
+              <p className="font-bold">{review.reviewer.username}</p>
+              <p>{review.review_text}</p>
+              <p>Rating: {review.rating}</p>
+            </div>
+          ))
+        )}
+
+        <Link
+          to={`/reviews/${bookId}`}
+          className="bg-blue-500 text-white py-2 mt-4 inline-block rounded hover:bg-blue-600"
+        >
+          Add a Review
+        </Link>
+       </div>
     </div>
   );
-};
+ };
 
-export default BookReviews;
+ export default BookReviews;

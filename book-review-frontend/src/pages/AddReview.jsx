@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const AddReview = () => {
   const { bookId } = useParams();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     review_text: "",
     rating: "",
@@ -28,7 +29,8 @@ const AddReview = () => {
         }
       );
       alert("Review added successfully!");
-      setFormData({ review_text: "", rating: "" }); // Reset form
+      setFormData({ review_text: "", rating: "" });
+      navigate(`/books/${bookId}`); // Redirect back to book reviews page
     } catch (err) {
       alert("Error: " + err.response.data.message);
     }
@@ -65,3 +67,4 @@ const AddReview = () => {
 };
 
 export default AddReview;
+
