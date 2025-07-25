@@ -3,7 +3,7 @@
 ## Overview
 This is a **Book Review Platform** where users can:
 - Add new books to the platform
-- View a list of books with filters (by author and genre)
+- View a paginated list of books with filters (by author and genre)
 - Write reviews for books and rate them
 - View all reviews for a book along with the average rating
 
