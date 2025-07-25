@@ -7,7 +7,7 @@ This is a **Book Review Platform** where users can:
 - Write reviews for books and rate them
 - View all reviews for a book along with the average rating
 
-This project is built with **React** for the frontend and **Node.js** for the backend. It leverages **JWT** authentication for user management.
+This project uses **React** for the frontend and **Node.js** for the backend. It also uses **JWT** authentication to manage users.
 
 ---
 
@@ -22,9 +22,9 @@ https://github.com/user-attachments/assets/b787b654-c184-4008-8fad-3b7564a05d66
 ## Setup Instructions
 
 ### Prerequisites
-- **Node.js** (v14 or above)
-- **MongoDB** (local or remote instance)
-- **NPM** (Node Package Manager)
+- **Node.js** 
+- **MongoDB** 
+- **NPM** 
 
 ### Steps to Run the Application
 
@@ -95,7 +95,7 @@ The backend is built using Express.js and MongoDB. The backend provides the foll
 
 The frontend is built using React.js and Tailwind CSS. The UI allows users to:
 
-- View Books: Display a paginated list of books with filters (by genre and author).
+- View Books: Display a list of books with filters (by genre and author).
 
 - Add Books: Only authenticated users can add new books.
 
