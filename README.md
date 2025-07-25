@@ -14,7 +14,10 @@ This project uses **React** for the frontend and **Node.js** for the backend. It
 ## Demo Video
 
 
-https://github.com/user-attachments/assets/b787b654-c184-4008-8fad-3b7564a05d66
+
+https://github.com/user-attachments/assets/7bfa2c9f-3dfc-43b0-9ac5-b803614ad239
+
+
 
 
 ---
