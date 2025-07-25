@@ -20,7 +20,7 @@ mongoose
 
 //! CORS Configuration
 const corsOptions = {
-  origin: ["http://localhost:5173"], // Frontend URL
+  origin: ["http://localhost:3000"], // Frontend URL
 };
 app.use(cors(corsOptions));
 
@@ -28,11 +28,9 @@ app.use(cors(corsOptions));
 app.use(express.json()); // Parse incoming JSON
 
 //! Routes
-//! Routes
 app.use("/api/users", userRouter);
 app.use("/api/books", bookRouter);
 app.use("/api/reviews", reviewRouter);
-
 
 //! Error Handling Middleware (should be after routes)
 app.use(errorHandler);

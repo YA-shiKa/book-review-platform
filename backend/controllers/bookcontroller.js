@@ -14,7 +14,6 @@ const bookController = {
       title,
       author,
       genre,
-      // addedBy: req.user,
     });
 
     res.status(201).json(book);
@@ -25,15 +24,19 @@ const bookController = {
     const { author, genre, page = 1, limit = 10 } = req.query;
     const filters = {};
 
-    if (author) filters.author = author;
-    if (genre) filters.genre = genre;
+    if (author) filters.author = new RegExp(author, "i");  
+    if (genre) filters.genre = new RegExp(genre, "i"); 
 
-    const books = await Book.find(filters)
-      .skip((page - 1) * limit)
-      .limit(Number(limit))
-      .sort({ createdAt: -1 });
+    try {
+      const books = await Book.find(filters)
+        .skip((page - 1) * limit)
+        .limit(Number(limit))
+        .sort({ createdAt: -1 });
 
-    res.status(200).json(books);
+      res.status(200).json(books);
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching books", error: error.message });
+    }
   }),
 
   // Get single book with reviews

@@ -1,4 +1,3 @@
-// routes/reviewRouter.js
 const express = require("express");
 const reviewRouter = express.Router();
 const isAuthenticated = require("../middlewares/isAuth");
@@ -12,9 +11,6 @@ reviewRouter.post(
 );
 
 // Route to list reviews for a book
-
-
-
 reviewRouter.get(
   "/:bookId",
   reviewController.list
