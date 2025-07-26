@@ -1,12 +1,38 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, Link } from "react-router-dom";
-
+import { FaStar, FaStarHalf } from "react-icons/fa"; 
 const BookReviews = () => {
   const { bookId } = useParams();
   const [reviews, setReviews] = useState([]);
   const [book, setBook] = useState({});
-  const [averageRating, setAverageRating] = useState(null); // Store average rating
+  const [averageRating, setAverageRating] = useState(null); 
+
+  // Helper function to display stars based on the rating 
+  const renderStars = (rating) => {
+    let stars = [];
+    const fullStars = Math.floor(rating); 
+    const hasHalfStar = rating % 1 !== 0; 
+    const emptyStars = 5 - Math.ceil(rating);
+
+    for (let i = 0; i < fullStars; i++) {
+      stars.push(
+        <FaStar key={`full-${i}`} size={20} className="text-yellow-400" />
+      );
+    }
+    if (hasHalfStar) {
+      stars.push(
+        <FaStarHalf key="half" size={20} className="text-yellow-400" />
+      );
+    }
+    for (let i = 0; i < emptyStars; i++) {
+      stars.push(
+        <FaStar key={`empty-${i}`} size={20} className="text-gray-300" />
+      );
+    }
+
+    return stars;
+  };
 
   useEffect(() => {
     const fetchBookAndReviews = async () => {
@@ -16,7 +42,7 @@ const BookReviews = () => {
           `http://localhost:8000/api/books/${bookId}`
         );
         setBook(bookData);
-        setAverageRating(bookData.averageRating); // Set average rating
+        setAverageRating(bookData.averageRating); 
 
         // Fetch reviews for the book
         const { data: reviewsData } = await axios.get(
@@ -37,10 +63,11 @@ const BookReviews = () => {
         <h2 className="text-3xl mb-4">{book.title}</h2>
         <p className="mb-2">Author: {book.author}</p>
         <p className="mb-2">Genre: {book.genre}</p>
+
         
-        {/* Display Average Rating */}
         <h3 className="text-xl mt-4">
-          Average Rating: {averageRating || "No ratings yet"}
+          Average Rating: {averageRating || "No ratings yet"}{" "}
+          <div className="flex">{renderStars(averageRating || 0)}</div> 
         </h3>
 
         <h3 className="text-2xl mt-6">Reviews</h3>
@@ -52,6 +79,9 @@ const BookReviews = () => {
               <p className="font-bold">{review.reviewer.username}</p>
               <p>{review.review_text}</p>
               <p>Rating: {review.rating}</p>
+              <div className="flex mb-4">
+                {renderStars(review.rating)} 
+              </div>
             </div>
           ))
         )}
@@ -62,9 +92,9 @@ const BookReviews = () => {
         >
           Add a Review
         </Link>
-       </div>
+      </div>
     </div>
   );
- };
+};
 
- export default BookReviews;
+export default BookReviews;

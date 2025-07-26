@@ -19,34 +19,36 @@ const bookController = {
     res.status(201).json(book);
   }),
 
- 
-list: asyncHandler(async (req, res) => {
-  const { author, genre, page = 1, limit = 10 } = req.query;
-  const filters = {};
+  // pagination, filters, and sorting added
+  list: asyncHandler(async (req, res) => {
+    const { author, genre, page = 1, limit = 9 } = req.query;
+    const filters = {};
 
-  if (author) filters.author = new RegExp(author, "i");  
-  if (genre) filters.genre = new RegExp(genre, "i"); 
+    // filters for author and genre 
+    if (author) filters.author = new RegExp(author, "i");
+    if (genre) filters.genre = new RegExp(genre, "i");
 
-  try {
-    const books = await Book.find(filters)
-      .skip((page - 1) * limit)
-      .limit(Number(limit))
-      .sort({ createdAt: -1 });
+    try {
+      // Fetch books 
+      const books = await Book.find(filters)
+        .skip((page - 1) * limit) 
+        .limit(Number(limit)) 
+        .sort({ createdAt: -1 }); 
+      // total number of books matching filters
+      const totalBooks = await Book.countDocuments(filters);
+      const totalPages = Math.ceil(totalBooks / limit); 
 
-    const totalBooks = await Book.countDocuments(filters); 
-    const totalPages = Math.ceil(totalBooks / limit); 
-
-    res.status(200).json({
-      books,
-      totalPages,
-      currentPage: page,
-      totalBooks,
-    });
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching books", error: error.message });
-  }
-}),
-
+      // Send the response 
+      res.status(200).json({
+        books,
+        totalPages,
+        currentPage: Number(page), 
+        totalBooks,
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching books", error: error.message });
+    }
+  }),
 
   // Get single book with reviews
   getById: asyncHandler(async (req, res) => {

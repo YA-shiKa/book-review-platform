@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 const BooksList = () => {
   const [books, setBooks] = useState([]);
   const [filters, setFilters] = useState({ author: "", genre: "" });
-  const [currentPage, setCurrentPage] = useState(1); // Track current page
-  const [totalPages, setTotalPages] = useState(1); // Track total pages
+  const [currentPage, setCurrentPage] = useState(1); 
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -15,7 +15,7 @@ const BooksList = () => {
           params: {
             ...filters,
             page: currentPage,
-            limit: 10, // Limit books per page
+            limit: 9, 
           },
         });
         setBooks(data.books);
@@ -26,7 +26,7 @@ const BooksList = () => {
     };
 
     fetchBooks();
-  }, [filters, currentPage]); // Re-fetch when filters or page changes
+  }, [filters, currentPage]); 
 
   const handleFilterChange = (e) => {
     setFilters({

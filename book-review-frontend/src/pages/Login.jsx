@@ -17,9 +17,9 @@ const Login = () => {
     e.preventDefault();
     try {
       const { data } = await axios.post("http://localhost:8000/api/users/login", formData);
-      localStorage.setItem("token", data.token); // Store token in localStorage
+      localStorage.setItem("token", data.token); 
       alert("Login successful!");
-      navigate("/dashboard"); // Redirect to the Dashboard after successful login
+      navigate("/dashboard"); 
     } catch (err) {
       alert("Error: " + err.response?.data?.message || err.message);
     }
@@ -61,7 +61,6 @@ const Login = () => {
           />
         </div>
 
-        {/* Submit Button */}
         <button
           type="submit"
           className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 w-full"
