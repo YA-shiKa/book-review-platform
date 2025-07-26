@@ -15,7 +15,11 @@ This project uses **React** for the frontend and **Node.js** for the backend. It
 
 
 
-https://github.com/user-attachments/assets/7bfa2c9f-3dfc-43b0-9ac5-b803614ad239
+
+
+https://github.com/user-attachments/assets/b2d72100-e362-4e47-877b-fa4dbce44dec
+
+
 
 
 
